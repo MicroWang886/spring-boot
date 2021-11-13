@@ -600,7 +600,7 @@ For example, consider the following YAML document:
 			name: Developer Setup
 		prod:
 			url: https://another.example.com
-			name: My Cool App
+			name: My Cool com.microwang.springboot.App
 ----
 
 The preceding example would be transformed into the following properties:
@@ -610,7 +610,7 @@ The preceding example would be transformed into the following properties:
 	environments.dev.url=https://dev.example.com
 	environments.dev.name=Developer Setup
 	environments.prod.url=https://another.example.com
-	environments.prod.name=My Cool App
+	environments.prod.name=My Cool com.microwang.springboot.App
 ----
 
 YAML lists are represented as property keys with `[index]` dereferencers.

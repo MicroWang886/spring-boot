@@ -126,7 +126,7 @@ At this point, `cf` starts uploading your application, producing output similar 
 	  ...
 	  1 of 1 instances running (1 running)
 
-	App started
+	com.microwang.springboot.App started
 ----
 
 Congratulations! The application is now live!
@@ -393,15 +393,15 @@ See the blog post on https://boxfuse.com/blog/spring-boot-ec2.html[deploying Spr
 [[cloud-deployment-gae]]
 === Google Cloud
 Google Cloud has several options that can be used to launch Spring Boot applications.
-The easiest to get started with is probably App Engine, but you could also find ways to run Spring Boot in a container with Container Engine or on a virtual machine with Compute Engine.
+The easiest to get started with is probably com.microwang.springboot.App Engine, but you could also find ways to run Spring Boot in a container with Container Engine or on a virtual machine with Compute Engine.
 
-To run in App Engine, you can create a project in the UI first, which sets up a unique identifier for you and also sets up HTTP routes.
+To run in com.microwang.springboot.App Engine, you can create a project in the UI first, which sets up a unique identifier for you and also sets up HTTP routes.
 Add a Java app to the project and leave it empty and then use the https://cloud.google.com/sdk/install[Google Cloud SDK] to push your Spring Boot app into that slot from the command line or CI build.
 
-App Engine Standard requires you to use WAR packaging.
-Follow https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/appengine-java8/springboot-helloworld/README.md[these steps] to deploy App Engine Standard application to Google Cloud.
+com.microwang.springboot.App Engine Standard requires you to use WAR packaging.
+Follow https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/appengine-java8/springboot-helloworld/README.md[these steps] to deploy com.microwang.springboot.App Engine Standard application to Google Cloud.
 
-Alternatively, App Engine Flex requires you to create an `app.yaml` file to describe the resources your app requires.
+Alternatively, com.microwang.springboot.App Engine Flex requires you to create an `app.yaml` file to describe the resources your app requires.
 Normally, you put this file in `src/main/appengine`, and it should resemble the following file:
 
 [source,yaml,indent=0]

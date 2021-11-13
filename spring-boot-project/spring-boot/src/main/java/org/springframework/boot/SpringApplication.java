@@ -265,12 +265,18 @@ public class SpringApplication {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) {
+		//资源加载器
 		this.resourceLoader = resourceLoader;
 		Assert.notNull(primarySources, "PrimarySources must not be null");
+		//Java config类的数组，就是我们的启动类
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+		//设置web应用的类型
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
+		//初始化initializer属性
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+		//初始化 listeners属性
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		//获得了启动类并赋值到这个属性上，用于打印日志
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
@@ -296,29 +302,44 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
+		//创建监视器记录启动时间
 		StopWatch stopWatch = new StopWatch();
+		//启动监视器
 		stopWatch.start();
 		ConfigurableApplicationContext context = null;
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
+		//配置headless属性 与AWT相关
 		configureHeadlessProperty();
+		//获取SpringApplicationRunListeners并启动监听器
 		SpringApplicationRunListeners listeners = getRunListeners(args);
 		listeners.starting();
 		try {
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+			//加载属性，执行完后，所有的环境参数都加载进来
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, applicationArguments);
 			configureIgnoreBeanInfo(environment);
+			//打印SpringBanner
 			Banner printedBanner = printBanner(environment);
+			//启动容器
 			context = createApplicationContext();
+			//异常报告器
 			exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
+			//调用初始化类的初始化方法
 			prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+			//刷新容器
 			refreshContext(context);
+			//执行后置逻辑
 			afterRefresh(context, applicationArguments);
+			//关闭监听器
 			stopWatch.stop();
+			//打印启动时长日志
 			if (this.logStartupInfo) {
 				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), stopWatch);
 			}
+			//通知监听器，告知容器启动完成
 			listeners.started(context);
+			// <14> 调用 ApplicationRunner 或者 CommandLineRunner 的运行方法。
 			callRunners(context, applicationArguments);
 		}
 		catch (Throwable ex) {
@@ -327,6 +348,7 @@ public class SpringApplication {
 		}
 
 		try {
+			//通知监听器容器运行中
 			listeners.running(context);
 		}
 		catch (Throwable ex) {
@@ -423,6 +445,7 @@ public class SpringApplication {
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
 		ClassLoader classLoader = getClassLoader();
 		// Use names and ensure unique to protect against duplicates
+		//加载指定类型对应的，在 `META-INF/spring.factories` 里的类名的数组
 		Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader));
 		List<T> instances = createSpringFactoriesInstances(type, parameterTypes, classLoader, args, names);
 		AnnotationAwareOrderComparator.sort(instances);
