@@ -79,6 +79,7 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+//自动配置包注解，它的作用是将获取启动类所在包路径，并将改包以及子包下的所有组件注册到IOC容器中
 @AutoConfigurationPackage
 @Import(AutoConfigurationImportSelector.class)
 public @interface EnableAutoConfiguration {

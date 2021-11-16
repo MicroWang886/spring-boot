@@ -69,6 +69,7 @@ import org.springframework.util.StringUtils;
  * @since 1.3.0
  * @see EnableAutoConfiguration
  */
+//负责处理资源的导入
 public class AutoConfigurationImportSelector implements DeferredImportSelector, BeanClassLoaderAware,
 		ResourceLoaderAware, BeanFactoryAware, EnvironmentAware, Ordered {
 
@@ -107,19 +108,29 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 	 * @param annotationMetadata the annotation metadata of the configuration class
 	 * @return the auto-configurations that should be imported
 	 */
+	//获得满足条件的配置类数组
 	protected AutoConfigurationEntry getAutoConfigurationEntry(AutoConfigurationMetadata autoConfigurationMetadata,
 			AnnotationMetadata annotationMetadata) {
 		if (!isEnabled(annotationMetadata)) {
 			return EMPTY_ENTRY;
 		}
+		//获得注解的属性
 		AnnotationAttributes attributes = getAttributes(annotationMetadata);
+		//获得符合条件的配置类数组
 		List<String> configurations = getCandidateConfigurations(annotationMetadata, attributes);
+		//移除重复的配置类
 		configurations = removeDuplicates(configurations);
+		//获取排除配置类
 		Set<String> exclusions = getExclusions(annotationMetadata, attributes);
+		//校验配置类是否合法
 		checkExcludedClasses(configurations, exclusions);
+		//移除需要的配置类
 		configurations.removeAll(exclusions);
+		//根据条件移除不符合条件的配置类
 		configurations = filter(configurations, autoConfigurationMetadata);
+		//触发自动配置类引入完成事件
 		fireAutoConfigurationImportEvents(configurations, exclusions);
+		//创建autoConfigurationEntry配置类
 		return new AutoConfigurationEntry(configurations, exclusions);
 	}
 
@@ -168,6 +179,8 @@ public class AutoConfigurationImportSelector implements DeferredImportSelector, 
 	 * @return a list of candidate configurations
 	 */
 	protected List<String> getCandidateConfigurations(AnnotationMetadata metadata, AnnotationAttributes attributes) {
+		//加载指定类型 EnableAutoConfiguration 对应的，在 `META-INF/spring.factories` 里的类名的数组
+		//getSpringFactoriesLoaderFactoryClass()获取要加载的配置类名称
 		List<String> configurations = SpringFactoriesLoader.loadFactoryNames(getSpringFactoriesLoaderFactoryClass(),
 				getBeanClassLoader());
 		Assert.notEmpty(configurations, "No auto configuration classes found in META-INF/spring.factories. If you "
